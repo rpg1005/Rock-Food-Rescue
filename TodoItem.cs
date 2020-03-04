@@ -2,22 +2,26 @@
 using Microsoft.WindowsAzure.MobileServices;
 using Newtonsoft.Json;
 
-namespace rockfoodrescue
+namespace foodadmin
 {
 	public class TodoItem
 	{
 		string id;
 		string name;
 		bool done;
+		DateTime over;
+		string place;
+		DateTime start;
 
 		[JsonProperty(PropertyName = "id")]
 		public string Id
 		{
 			get { return id; }
 			set { id = value;}
+
 		}
 
-		[JsonProperty(PropertyName = "text")]
+        [JsonProperty(PropertyName = "text")]
 		public string Name
 		{
 			get { return name; }
@@ -31,8 +35,30 @@ namespace rockfoodrescue
 			set { done = value;}
 		}
 
-        [Version]
+		[JsonProperty(PropertyName = "expired")]
+		public DateTime Over
+		{
+			get { return over; }
+			set { over = value; }
+		}
+
+		[JsonProperty(PropertyName = "location")]
+		public string Place
+		{
+			get { return place; }
+			set { place = value; }
+		}
+
+		[JsonProperty(PropertyName = "begins")]
+		public DateTime Start
+		{
+			get { return start; }
+			set { start = value; }
+		}
+
+		[Version]
         public string Version { get; set; }
 	}
 }
+
 

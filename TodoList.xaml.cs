@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
-namespace rockfoodrescue
+namespace foodadmin
 {
     public partial class TodoList : ContentPage
     {
@@ -34,14 +35,33 @@ namespace rockfoodrescue
                 }
             }
         }
-        void Map_Clicked(object sender, EventArgs e)
+        void Push_Clicked(object sender, EventArgs e)
         {
-            Device.OpenUri(new Uri("http://rockpride.sru.edu/map/"));
+            Device.OpenUri(new Uri("https://appcenter.ms/users/rpg1005-sru.edu/apps/rockfoodrescue/push/notifications"));
+        }
+
+        public async Task SendSms()
+        {
+            try
+            {
+                string messageText = "Food available. Login to app for details.";
+                string recipient = "4403648413";
+                var message = new SmsMessage(messageText, new[] { recipient });
+                await Sms.ComposeAsync(message);
+            }
+            catch (FeatureNotSupportedException ex)
+            {
+                // Sms is not supported on this device.
+            }
+            catch (Exception ex)
+            {
+                // Other error has occurred.
+            }
         }
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            newItemName.IsVisible = false;
+
             // Set syncItems to true in order to synchronize the data on startup when running in offline mode
             await RefreshItems(true, syncItems: true);
         }
@@ -50,25 +70,30 @@ namespace rockfoodrescue
         async Task AddItem(TodoItem item)
         {
             await manager.SaveTaskAsync(item);
-            todoList.ItemsSource = await manager.GetTodoItemsAsync();
+            //todoList.ItemsSource = await manager.GetTodoItemsAsync();
         }
 
         async Task CompleteItem(TodoItem item)
         {
             item.Done = true;
             await manager.SaveTaskAsync(item);
-            todoList.ItemsSource = await manager.GetTodoItemsAsync();
+            //todoList.ItemsSource = await manager.GetTodoItemsAsync();
         }
 
         public async void OnAdd(object sender, EventArgs e)
         {
-            var todo = new TodoItem { Name = newItemName.Text };
-            //await AddItem(todo);
+            var todo = new TodoItem { Name = newItemName.Text , Over = overDate.Date + overTime.Time, Start = startDate.Date + startTime.Time, Place = local.Text };
+            await AddItem(todo);
 
             newItemName.Text = string.Empty;
+            local.Text = string.Empty;
+            overDate.Date = DateTime.Now;
+            overTime.Time = DateTime.Now.TimeOfDay;
+            startDate.Date = DateTime.Now;
+            startTime.Time = DateTime.Now.TimeOfDay;
             newItemName.Unfocus();
-            todoList.ItemsSource = await manager.GetTodoItemsAsync();
-        }
+            local.Unfocus();
+        } 
 
         // Event handlers
         public async void OnSelected(object sender, SelectedItemChangedEventArgs e)
@@ -92,7 +117,7 @@ namespace rockfoodrescue
             }
 
             // prevents background getting highlighted
-            todoList.SelectedItem = null;
+            //todoList.SelectedItem = null;
         }
 
         // http://developer.xamarin.com/guides/cross-platform/xamarin-forms/working-with/listview/#context
@@ -141,7 +166,7 @@ namespace rockfoodrescue
         {
             using (var scope = new ActivityIndicatorScope(syncIndicator, showActivityIndicator))
             {
-                todoList.ItemsSource = await manager.GetTodoItemsAsync(syncItems);
+                //todoList.ItemsSource = await manager.GetTodoItemsAsync(syncItems);
             }
         }
 
