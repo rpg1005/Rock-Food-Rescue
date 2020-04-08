@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage 	xmlns="http://xamarin.com/schemas/2014/forms" 
-				xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-				x:Class="foodadmin.TodoList"
-				Title="Food Admin">
+<ContentPage 	xmlns="http://xamarin.com/schemas/2014/forms"               
+				xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+				x:Class="foodadmin.TodoList"  
+				Title="Post">
     <Grid RowSpacing="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="63*" />
+            <RowDefinition Height="37*" />
         </Grid.RowDefinitions>
         <ActivityIndicator Grid.RowSpan="2"
                            HorizontalOptions="Center"
@@ -14,22 +14,54 @@
                            IsVisible="False"
                            IsEnabled="True"
                            x:Name="syncIndicator"/>
-        <StackLayout Grid.Row="0" BackgroundColor="#007055" Padding="10,30,10,5">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="25" />
-                    <RowDefinition Height="5" />
-                    <RowDefinition Height="45" />
-                </Grid.RowDefinitions>
-                <Label Text="Rock Food Rescue" 
+        <StackLayout Grid.Row="0" BackgroundColor="#007055" Padding="10,5,10,5">
+            <Label Text="Rock Food Rescue" 
                        TextColor="White"
                        FontSize="Medium"
-                       HorizontalOptions="Center"
-                       Grid.Row="0">
-                </Label>
+                       HorizontalOptions="Center">
+            </Label>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0" />
+                    <RowDefinition Height="0" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="72*"/>
+                    <ColumnDefinition Width="28*"/>
+                </Grid.ColumnDefinitions>
                 <Entry x:Name="newItemName"
-                       Placeholder="Enter Message"
-                       Grid.Row="2"/>
+                        Placeholder="Enter Food"
+                        Grid.Row="2"
+                        Grid.Column="0"/>
+                <Entry x:Name="local"
+                        Placeholder="Enter Place"
+                        Grid.Row="3"
+                        Grid.Column="0"/>
+                <Grid Grid.Row="4">
+                    <DatePicker x:Name="startDate"                              
+                                MinimumDate="01/01/2020"
+                                MaximumDate="12/31/2030"/>
+                    <TimePicker x:Name="startTime"
+                                Grid.Column="1"/>
+                </Grid>
+                <Label Text="Select Start Date &amp; Time" 
+                       TextColor="Gray"
+                       FontSize="Medium"
+                       Grid.Row="5"
+                       Grid.Column="0"/>
+                <Grid Grid.Row="6">
+                    <DatePicker x:Name="overDate"                              
+                                MinimumDate="01/01/2020"
+                                MaximumDate="12/31/2030"/>
+                    <TimePicker x:Name="overTime"
+                                Grid.Column="1"/>
+                </Grid>
+                <Label Text="Select Finish Date &amp; Time" 
+                       TextColor="Gray"
+                       FontSize="Medium"
+                       Grid.Row="7"
+                       Grid.Column="0"/>
             </Grid>
             <Grid x:Name="buttonsPanel">
                 <Grid.ColumnDefinitions>
@@ -37,21 +69,37 @@
                     <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
-                <Button Text="       Send       "
+                <Button Text="      Post      "
                         BackgroundColor="#FFCB0B"
                         MinimumHeightRequest="30"
-                        Clicked="OnAdd" 
-                        Grid.Column="0"
+                        Clicked="OnAdd"
+                        Grid.Row="0"
+                        Grid.Column="1"
                         HorizontalOptions="Center"/>
-                <Button Text="       Push       "
+                <!--<Button Text=" Push "
                         BackgroundColor="#FFCB0B"
                         MinimumHeightRequest="30"
                         Clicked="Push_Clicked"
-                        Grid.Column="2"
+                        Grid.Column="0"
                         HorizontalOptions="Center"/>
+                <Button Text=" Text "
+                        BackgroundColor="#FFCB0B"
+                        MinimumHeightRequest="30"
+                        Clicked="SendSms"
+                        Grid.Column="2"
+                        HorizontalOptions="Center"/>-->
             </Grid>
         </StackLayout>
-        <ListView x:Name="todoList"
+        <StackLayout x:Name="imagePanel"
+                     Grid.Row="1"
+                     Orientation="Vertical" 
+                     HorizontalOptions="Center"                     
+                     VerticalOptions="Center">
+            <Image Source="srumodernseal.png"
+                   Aspect="AspectFill"
+                   VerticalOptions="EndAndExpand"></Image>
+        </StackLayout>
+        <!--<ListView x:Name="todoList"
 				ItemSelected="OnSelected"
 				IsPullToRefreshEnabled="true" Refreshing="OnRefresh"
 				Grid.Row="1">
@@ -69,6 +117,6 @@
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
-        </ListView>
+        </ListView>-->
     </Grid>
 </ContentPage>

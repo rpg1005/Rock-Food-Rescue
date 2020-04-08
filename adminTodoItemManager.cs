@@ -11,9 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.MobileServices;
 
@@ -85,9 +83,63 @@ namespace foodadmin
                 {
                     await this.SyncAsync();
                 }
+#endif                            
+                IEnumerable<TodoItem> items = await todoTable
+                    .Where(todoItem => !todoItem.Done && todoItem.Over>DateTime.Now)
+                    .ToEnumerableAsync();
+
+                return new ObservableCollection<TodoItem>(items);
+            }
+            catch (MobileServiceInvalidOperationException msioe)
+            {
+                Debug.WriteLine("Invalid sync operation: {0}", new[] { msioe.Message });
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Sync error: {0}", new[] { e.Message });
+            }
+            return null;
+        }
+
+        public async Task<ObservableCollection<TodoItem>> GetTextNumbersAsync(bool syncItems = false)
+        {
+            try
+            {
+#if OFFLINE_SYNC_ENABLED
+                if (syncItems)
+                {
+                    await this.SyncAsync();
+                }
 #endif
                 IEnumerable<TodoItem> items = await todoTable
-                    .Where(todoItem => !todoItem.Done)
+                    .Where(todoItem => !todoItem.Done && todoItem.TextNumber != null)
+                    .ToEnumerableAsync();
+
+                return new ObservableCollection<TodoItem>(items);
+            }
+            catch (MobileServiceInvalidOperationException msioe)
+            {
+                Debug.WriteLine("Invalid sync operation: {0}", new[] { msioe.Message });
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Sync error: {0}", new[] { e.Message });
+            }
+            return null;
+        }
+
+        public async Task<ObservableCollection<TodoItem>> GetLoginAsync(bool syncItems = false)
+        {
+            try
+            {
+#if OFFLINE_SYNC_ENABLED
+                if (syncItems)
+                {
+                    await this.SyncAsync();
+                }
+#endif                            
+                IEnumerable<TodoItem> items = await todoTable
+                    .Where(todoItem => !todoItem.Done && todoItem.UserName != null)
                     .ToEnumerableAsync();
 
                 return new ObservableCollection<TodoItem>(items);
@@ -120,6 +172,11 @@ namespace foodadmin
             {
                 Debug.WriteLine("Save error: {0}", new[] { e.Message });
             }
+        }
+
+        public async Task DeleteTodoItem(TodoItem item)
+        {
+            await todoTable.DeleteAsync(item);
         }
 
 #if OFFLINE_SYNC_ENABLED
