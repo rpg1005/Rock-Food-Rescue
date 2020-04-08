@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage 	xmlns="http://xamarin.com/schemas/2014/forms" 
+				xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+				x:Class="foodadmin.Title"
+				Title="Rock Food Rescue">
+    <Grid>
+        <Image Source="boozel.jpg"
+               Aspect="Fill">
+        </Image>
+        <StackLayout VerticalOptions="Center">
+            <Label Text="Username"
+                   TextColor="#FFCB0B"
+                   FontSize="Medium"></Label>
+            <Entry x:Name="username"
+                   Placeholder="Enter Username"
+                   BackgroundColor="#FFCB0B"/>
+            <Label Text="Password"
+                    TextColor="#FFCB0B"
+                   FontSize="Medium"></Label>
+            <Entry x:Name="password"
+                   Placeholder="Enter Password"
+                   BackgroundColor="#FFCB0B"/>
+            <Button Text="Enter"
+                    BackgroundColor="#FFCB0B"
+                    FontSize="40"
+                    VerticalOptions="CenterAndExpand"
+                    HorizontalOptions="Center"
+                    Clicked="Enter_Clicked"
+                    HeightRequest="100"
+                    WidthRequest="200"  />
+        </StackLayout>
+    </Grid>
+</ContentPage>
