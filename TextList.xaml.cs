@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -38,43 +36,6 @@ namespace rockfoodrescue
             }
         }
 
-        public async void OnRemove(object sender, EventArgs e)
-        {
-            bool match = false;
-            TodoItem matchedItem = new TodoItem();
-            ObservableCollection<TodoItem> textList = await manager.GetTextNumbersAsync();
-            foreach (TodoItem item in textList)
-            {
-                if (item.TextNumber == enteredNum.Text)
-                {
-                    match = true;
-                    matchedItem = item;
-                    break;
-                }
-                else
-                {
-                    match = false;
-                }
-            }
-            if (match == true)
-            { 
-                await RemoveItem(matchedItem);
-                enteredNum.Text = string.Empty;
-                enteredNum.Unfocus();
-                await DisplayAlert("Success", "Text Number Removed", "OK");
-            }
-            else
-            {
-                enteredNum.Text = string.Empty;
-                enteredNum.Unfocus();
-                await DisplayAlert("Alert", "Text Number Not Found", "OK");
-            }
-        }
-        async Task RemoveItem(TodoItem item)
-        {
-            await manager.RemoveTaskAsync(item);
-        }
-
         protected override async void OnAppearing()
         {
             base.OnAppearing();
@@ -104,6 +65,12 @@ namespace rockfoodrescue
             await manager.SaveTaskAsync(item);
             //textList.ItemsSource = await manager.GetTodoItemsAsync();
         }
+        async Task RemoveItem(TodoItem item)
+        {
+            await manager.RemoveTaskAsync(item);
+        }
+
+        // Event handlers
 
         public async void OnAdd(object sender, EventArgs e)
         {
@@ -123,8 +90,39 @@ namespace rockfoodrescue
                 await DisplayAlert("Error", "Invalid Text Number", "Reenter");
             }
         }
-
-        // Event handlers
+        public async void OnRemove(object sender, EventArgs e)
+        {
+            bool match = false;
+            TodoItem matchedItem = new TodoItem();
+            ObservableCollection<TodoItem> textList = await manager.GetTextNumbersAsync();
+            foreach (TodoItem item in textList)
+            {
+                if (item.TextNumber == enteredNum.Text)
+                {
+                    match = true;
+                    matchedItem = item;
+                    break;
+                }
+                else
+                {
+                    match = false;
+                }
+            }
+            if (match == true)
+            {
+                await RemoveItem(matchedItem);
+                enteredNum.Text = string.Empty;
+                enteredNum.Unfocus();
+                await DisplayAlert("Success", "Text Number Removed", "OK");
+            }
+            else
+            {
+                enteredNum.Text = string.Empty;
+                enteredNum.Unfocus();
+                await DisplayAlert("Alert", "Text Number Not Found", "OK");
+            }
+        }
+        
         public async void OnSelected(object sender, SelectedItemChangedEventArgs e)
         {
             var todo = e.SelectedItem as TodoItem;

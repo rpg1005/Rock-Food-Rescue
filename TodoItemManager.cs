@@ -11,9 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.MobileServices;
 
@@ -76,6 +74,7 @@ namespace rockfoodrescue
             get { return todoTable is Microsoft.WindowsAzure.MobileServices.Sync.IMobileServiceSyncTable<TodoItem>; }
         }
 
+        //Get Messages
         public async Task<ObservableCollection<TodoItem>> GetTodoItemsAsync(bool syncItems = false)
         {
             try
@@ -87,7 +86,7 @@ namespace rockfoodrescue
                 }
 #endif
                 IEnumerable<TodoItem> items = await todoTable
-                    .Where(todoItem => !todoItem.Done)
+                    .Where(todoItem => !todoItem.Done && todoItem.Over > DateTime.Now && todoItem.Name != null)
                     .ToEnumerableAsync();
 
                 return new ObservableCollection<TodoItem>(items);
@@ -103,6 +102,45 @@ namespace rockfoodrescue
             return null;
         }
 
+        //Get Text Numbers from DB
+        public async Task<ObservableCollection<TodoItem>> GetTextNumbersAsync(bool syncItems = false)
+        {
+            try
+            {
+#if OFFLINE_SYNC_ENABLED
+                if (syncItems)
+                {
+                    await this.SyncAsync();
+                }
+#endif
+                IEnumerable<TodoItem> items = await todoTable
+                    .Where(todoItem => !todoItem.Done && todoItem.TextNumber != null)
+                    .ToEnumerableAsync();
+
+                return new ObservableCollection<TodoItem>(items);
+            }
+            catch (MobileServiceInvalidOperationException msioe)
+            {
+                Debug.WriteLine("Invalid sync operation: {0}", new[] { msioe.Message });
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Sync error: {0}", new[] { e.Message });
+            }
+            return null;
+        }
+
+        public async Task RemoveTaskAsync(TodoItem item)
+        {
+            try
+            {              
+                    await todoTable.DeleteAsync(item);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Save error: {0}", new[] { e.Message });
+            }
+        }
         public async Task SaveTaskAsync(TodoItem item)
         {
             try

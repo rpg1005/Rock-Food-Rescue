@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
-namespace foodadmin
+namespace rockfoodrescue
 {
+    //Get messages
     public partial class TodoList : ContentPage
     {
         TodoItemManager manager;
@@ -14,53 +15,44 @@ namespace foodadmin
             InitializeComponent();
 
             manager = TodoItemManager.DefaultManager;
-            if (Device.RuntimePlatform == Device.UWP)
-            {
-                var refreshButton = new Button
-                {
-                    Text = "Refresh",
-                    HeightRequest = 30
-                };
-                refreshButton.Clicked += OnRefreshItems;
-                buttonsPanel.Children.Add(refreshButton);
-                if (manager.IsOfflineEnabled)
-                {
-                    var syncButton = new Button
-                    {
-                        Text = "Sync items",
-                        HeightRequest = 30
-                    };
-                    syncButton.Clicked += OnSyncItems;
-                    buttonsPanel.Children.Add(syncButton);
-                }
-            }
+        //    if (Device.RuntimePlatform == Device.UWP)
+        //    {
+        //        var refreshButton = new Button
+        //        {
+        //            Text = "Refresh",
+        //            HeightRequest = 30
+        //        };
+        //        refreshButton.Clicked += OnRefreshItems;
+        //        buttonsPanel.Children.Add(refreshButton);
+        //        if (manager.IsOfflineEnabled)
+        //        {
+        //            var syncButton = new Button
+        //            {
+        //                Text = "Sync items",
+        //                HeightRequest = 30
+        //            };
+        //            syncButton.Clicked += OnSyncItems;
+        //            buttonsPanel.Children.Add(syncButton);
+        //        }
+        //    }
         }
-        void Push_Clicked(object sender, EventArgs e)
+        void Map_Clicked(object sender, EventArgs e)
         {
-            Device.OpenUri(new Uri("https://appcenter.ms/users/rpg1005-sru.edu/apps/rockfoodrescue/push/notifications"));
+            Launcher.OpenAsync(new Uri("http://rockpride.sru.edu/map/"));
         }
-
-        public async Task SendSms()
+        private async void Text_Clicked(object sender, EventArgs e)
         {
-            try
-            {
-                string messageText = "Food available. Login to app for details.";
-                string recipient = "4403648413";
-                var message = new SmsMessage(messageText, new[] { recipient });
-                await Sms.ComposeAsync(message);
-            }
-            catch (FeatureNotSupportedException ex)
-            {
-                // Sms is not supported on this device.
-            }
-            catch (Exception ex)
-            {
-                // Other error has occurred.
-            }
+            await Navigation.PushAsync(new TextList());
         }
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+            newItemName.IsVisible = false;
+            overDate.IsVisible = false;
+            local.IsVisible = false;
+            startDate.IsVisible = false;
+            overTime.IsVisible = false;
+            startTime.IsVisible = false;
 
             // Set syncItems to true in order to synchronize the data on startup when running in offline mode
             await RefreshItems(true, syncItems: true);
@@ -70,20 +62,20 @@ namespace foodadmin
         async Task AddItem(TodoItem item)
         {
             await manager.SaveTaskAsync(item);
-            //todoList.ItemsSource = await manager.GetTodoItemsAsync();
+            todoList.ItemsSource = await manager.GetTodoItemsAsync();
         }
 
         async Task CompleteItem(TodoItem item)
-        {
-            item.Done = true;
-            await manager.SaveTaskAsync(item);
-            //todoList.ItemsSource = await manager.GetTodoItemsAsync();
+        {           
+            todoList.ItemsSource = await manager.GetTodoItemsAsync();
         }
 
+        //Get messages
         public async void OnAdd(object sender, EventArgs e)
         {
-            var todo = new TodoItem { Name = newItemName.Text , Over = overDate.Date + overTime.Time, Start = startDate.Date + startTime.Time, Place = local.Text };
-            await AddItem(todo);
+            DateTime now = DateTime.Now;
+            var todo = new TodoItem { Name = newItemName.Text, Over = now, Start = now, Place = local.Text };
+            //await AddItem(todo);
 
             newItemName.Text = string.Empty;
             local.Text = string.Empty;
@@ -93,7 +85,8 @@ namespace foodadmin
             startTime.Time = DateTime.Now.TimeOfDay;
             newItemName.Unfocus();
             local.Unfocus();
-        } 
+            todoList.ItemsSource = await manager.GetTodoItemsAsync();
+        }
 
         // Event handlers
         public async void OnSelected(object sender, SelectedItemChangedEventArgs e)
@@ -117,19 +110,68 @@ namespace foodadmin
             }
 
             // prevents background getting highlighted
-            //todoList.SelectedItem = null;
+            todoList.SelectedItem = null;
         }
 
         // http://developer.xamarin.com/guides/cross-platform/xamarin-forms/working-with/listview/#context
-        public async void OnComplete(object sender, EventArgs e)
+        
+        //Options Menu
+        public void OnComplete(object sender, EventArgs e)
         {
             var mi = ((MenuItem)sender);
             var todo = mi.CommandParameter as TodoItem;
-            await CompleteItem(todo);
+            //Button deleteBtn = new Button
+            //{
+            //    Text = "Delete Post",
+            //    BackgroundColor = Color.FromHex("#FFCB0B"),
+            //    Margin = 10
+            //};
+
+            //deleteBtn.Clicked += (async (sender1, e1) => await CompleteItem(todo));
+
+            Button photoBtn = new Button
+            {
+                Text = "View Picture",
+                BackgroundColor = Color.FromHex("#FFCB0B"),
+                Margin = 10
+            };
+            photoBtn.Clicked += (sender2, e2) => DownloadImage(todo.Image);
+
+            Button backBtn = new Button
+            {
+                Text = "Back",
+                BackgroundColor = Color.FromHex("#FFCB0B"),
+                Margin = 10
+            };
+            backBtn.Clicked += (sender3, e3) => Navigation.PushAsync(new TodoList());
+
+            Image seal = new Image
+            {
+                Source = "srumodernseal.png",
+                BackgroundColor = Color.White,
+                Margin = 70
+            };
+
+            Content = new StackLayout
+            {
+                BackgroundColor = Color.FromHex("#007055"),
+
+                Children =
+                {
+                   //deleteBtn,
+                   photoBtn,
+                   backBtn,
+                   seal
+                }
+            };
+        }
+        public async void DownloadImage(string url)
+        {
+            await Navigation.PushAsync(new Picture(url));
         }
 
-        // http://developer.xamarin.com/guides/cross-platform/xamarin-forms/working-with/listview/#pulltorefresh
-        public async void OnRefresh(object sender, EventArgs e)
+    // http://developer.xamarin.com/guides/cross-platform/xamarin-forms/working-with/listview/#pulltorefresh
+    public async void OnRefresh(object sender, EventArgs e)
         {
             var list = (ListView)sender;
             Exception error = null;
@@ -166,7 +208,7 @@ namespace foodadmin
         {
             using (var scope = new ActivityIndicatorScope(syncIndicator, showActivityIndicator))
             {
-                //todoList.ItemsSource = await manager.GetTodoItemsAsync(syncItems);
+                todoList.ItemsSource = await manager.GetTodoItemsAsync(syncItems);
             }
         }
 

@@ -22,14 +22,12 @@
                     FontSize="Medium" 
                     HorizontalOptions="Center">
             </Label>
-            <Label  Text="Enter Cell Phone Number to Recieve Text Notifications" 
+            <Label  Text="Enter Cell Phone Number to Receive Text Notifications" 
                     TextColor="Black" 
                     FontSize="Medium">
             </Label>
-            <Entry x:Name="newItemName" 
-                    Placeholder="Item name" />
-            <Entry x:Name="local" 
-                    Placeholder="Item name" />
+            <Entry x:Name="newItemName" />
+            <Entry x:Name="local" />
             <DatePicker x:Name="overDate"  />
             <DatePicker x:Name="startDate" />
             <TimePicker x:Name="overTime"  />
@@ -37,7 +35,8 @@
             <Entry x:Name="enteredNum"                       
                     Placeholder="Enter Text Number Here" 
                     Grid.Row="2"
-                    Keyboard="Numeric"/>
+                    Keyboard="Numeric"
+                    AutomationId="enteredNum"/>
             <Grid Grid.Row="1"  
                   x:Name="buttonsPanel" 
                   HorizontalOptions="Center" 

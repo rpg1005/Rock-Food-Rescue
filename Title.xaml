@@ -2,16 +2,18 @@
 <ContentPage 	xmlns="http://xamarin.com/schemas/2014/forms" 
 				xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
 				x:Class="rockfoodrescue.Title"
-				Title="Rock Food Rescue"
-                BackgroundImage="boozel.jpg">
-    <ContentView>
+				Title="Rock Food Rescue">
+    <Grid>
+        <Image Source="boozel.jpg"
+               Aspect="Fill">
+        </Image>
         <Button Text="Enter"
-            FontSize="40"
-            VerticalOptions="CenterAndExpand"
-            HorizontalOptions="Center"
-            Clicked="Enter_Clicked" 
-            BackgroundColor="#FFCB0B"
-            HeightRequest="100"
-            WidthRequest="200"/>
-    </ContentView>
+                BackgroundColor="#FFCB0B"
+                FontSize="30"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Clicked="Enter_Clicked"
+                Padding="115,10,115,10"
+                Margin=" 0,10,0,0"  />
+    </Grid>
 </ContentPage>
