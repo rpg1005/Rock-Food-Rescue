@@ -12,9 +12,11 @@ namespace foodadmin
 		DateTime over;
 		string place;
 		DateTime start;
+		DateTime created;
 		string textNumber;
 		string userName;
 		string passWord;
+		string image;		
 
 		[JsonProperty(PropertyName = "id")]
 		public string Id
@@ -59,6 +61,13 @@ namespace foodadmin
 			set { start = value; }
 		}
 
+		[JsonProperty(PropertyName = "createdAt")]
+		public DateTime Created
+		{
+			get { return created; }
+			set { created = value; }
+		}
+
 		[JsonProperty(PropertyName = "sms")]
 		public string TextNumber
 		{
@@ -80,6 +89,13 @@ namespace foodadmin
 			get { return passWord; }
 			set { passWord = value; }
 
+		}
+
+		[JsonProperty(PropertyName = "url")]
+		public string Image
+		{
+			get { return image; }
+			set { image = value; }
 		}
 
 		[Version]

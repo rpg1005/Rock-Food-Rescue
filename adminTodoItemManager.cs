@@ -74,6 +74,7 @@ namespace foodadmin
             get { return todoTable is Microsoft.WindowsAzure.MobileServices.Sync.IMobileServiceSyncTable<TodoItem>; }
         }
 
+        //Get Messages
         public async Task<ObservableCollection<TodoItem>> GetTodoItemsAsync(bool syncItems = false)
         {
             try
@@ -101,6 +102,35 @@ namespace foodadmin
             return null;
         }
 
+        //Analytics Go 
+        public async Task<ObservableCollection<TodoItem>> GetAllTasksAsync(bool syncItems = false)
+        {
+            try
+            {
+#if OFFLINE_SYNC_ENABLED
+                if (syncItems)
+                {
+                    await this.SyncAsync();
+                }
+#endif                            
+                IEnumerable<TodoItem> items = await todoTable
+                    .Where(todoItem => !todoItem.Done && todoItem.Name != null)
+                    .ToEnumerableAsync();
+
+                return new ObservableCollection<TodoItem>(items);
+            }
+            catch (MobileServiceInvalidOperationException msioe)
+            {
+                Debug.WriteLine("Invalid sync operation: {0}", new[] { msioe.Message });
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Sync error: {0}", new[] { e.Message });
+            }
+            return null;
+        }
+
+        //Get Text Numbers from DB
         public async Task<ObservableCollection<TodoItem>> GetTextNumbersAsync(bool syncItems = false)
         {
             try
@@ -128,6 +158,7 @@ namespace foodadmin
             return null;
         }
 
+        //Get Login Credentials from DB
         public async Task<ObservableCollection<TodoItem>> GetLoginAsync(bool syncItems = false)
         {
             try

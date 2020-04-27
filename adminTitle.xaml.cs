@@ -14,6 +14,10 @@ namespace foodadmin
         }
         private async void Enter_Clicked(object sender, EventArgs e)
         {
+            //Comment credentials out after debug
+            //username.Text = "foodadmin";
+            //password.Text = "FOODR0cks!";
+
             ObservableCollection<TodoItem> userList = await manager.GetLoginAsync();
             foreach (TodoItem item in userList)
             {

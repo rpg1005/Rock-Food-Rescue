@@ -5,8 +5,8 @@
 				Title="Post">
     <Grid RowSpacing="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="63*" />
-            <RowDefinition Height="37*" />
+            <RowDefinition Height="100*" />
+            <RowDefinition Height="0*" />
         </Grid.RowDefinitions>
         <ActivityIndicator Grid.RowSpan="2"
                            HorizontalOptions="Center"
@@ -22,23 +22,47 @@
             </Label>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0" />
-                    <RowDefinition Height="0" />
+                    <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="72*"/>
-                    <ColumnDefinition Width="28*"/>
+                    <ColumnDefinition Width="30*"/>
+                    <ColumnDefinition Width="70*"/>
                 </Grid.ColumnDefinitions>
+                <Button Text="      Photo      "
+                        BackgroundColor="#FFCB0B"
+                        MinimumHeightRequest="30"
+                        Clicked="Photo_Clicked"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        HorizontalOptions="Center" />
+                <Label  Text="Image Url" 
+                    TextColor="Black" 
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    FontSize="Medium"
+                    HorizontalOptions="Center" >
+                </Label>
+                <Entry x:Name="ImageUrl"
+                    TextColor="Black"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    FontSize="Medium"
+                    IsReadOnly="true">
+                </Entry>
+            </Grid>
+            <Grid>
                 <Entry x:Name="newItemName"
-                        Placeholder="Enter Food"
-                        Grid.Row="2"
-                        Grid.Column="0"/>
+                    Placeholder="Enter Food"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    AutomationId="newItemName"/>
                 <Entry x:Name="local"
                         Placeholder="Enter Place"
-                        Grid.Row="3"
-                        Grid.Column="0"/>
-                <Grid Grid.Row="4">
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        AutomationId="local"/>
+                <Grid Grid.Row="2">
                     <DatePicker x:Name="startDate"                              
                                 MinimumDate="01/01/2020"
                                 MaximumDate="12/31/2030"/>
@@ -48,9 +72,9 @@
                 <Label Text="Select Start Date &amp; Time" 
                        TextColor="Gray"
                        FontSize="Medium"
-                       Grid.Row="5"
+                       Grid.Row="3"
                        Grid.Column="0"/>
-                <Grid Grid.Row="6">
+                <Grid Grid.Row="4">
                     <DatePicker x:Name="overDate"                              
                                 MinimumDate="01/01/2020"
                                 MaximumDate="12/31/2030"/>
@@ -60,34 +84,29 @@
                 <Label Text="Select Finish Date &amp; Time" 
                        TextColor="Gray"
                        FontSize="Medium"
-                       Grid.Row="7"
+                       Grid.Row="5"
                        Grid.Column="0"/>
             </Grid>
             <Grid x:Name="buttonsPanel">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="4*"/>
                 </Grid.ColumnDefinitions>
-                <Button Text="      Post      "
+                <Button Text="        Post         "
                         BackgroundColor="#FFCB0B"
                         MinimumHeightRequest="30"
                         Clicked="OnAdd"
                         Grid.Row="0"
-                        Grid.Column="1"
-                        HorizontalOptions="Center"/>
-                <!--<Button Text=" Push "
-                        BackgroundColor="#FFCB0B"
-                        MinimumHeightRequest="30"
-                        Clicked="Push_Clicked"
                         Grid.Column="0"
                         HorizontalOptions="Center"/>
-                <Button Text=" Text "
+                <Button Text="       Home       "
                         BackgroundColor="#FFCB0B"
                         MinimumHeightRequest="30"
-                        Clicked="SendSms"
+                        Clicked="Back_Clicked"
+                        Grid.Row="0"
                         Grid.Column="2"
-                        HorizontalOptions="Center"/>-->
+                        HorizontalOptions="Center"/>
             </Grid>
         </StackLayout>
         <StackLayout x:Name="imagePanel"

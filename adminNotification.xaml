@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage 	xmlns="http://xamarin.com/schemas/2014/forms" 
+				xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+				x:Class="foodadmin.Notification"
+                Title="Alert">
+    <Grid RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <ActivityIndicator Grid.RowSpan="2"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           IsVisible="False"
+                           IsEnabled="True"
+                           x:Name="syncIndicator"/>
+        <StackLayout Grid.Row="0" BackgroundColor="#007055" Padding="10,5,10,5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="15" />
+                </Grid.RowDefinitions>
+                <Label Text="Rock Food Rescue" 
+                       TextColor="White"
+                       FontSize="Medium"
+                       HorizontalOptions="Center"
+                       Grid.Row="0">
+                </Label>
+            </Grid>
+            <Grid x:Name="buttonsPanel">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="4*"/>
+                </Grid.ColumnDefinitions>
+                <Button Text="     Push     "
+                        BackgroundColor="#FFCB0B"
+                        MinimumHeightRequest="30"
+                        Clicked="Push_Clicked"
+                        Grid.Column="0"
+                        HorizontalOptions="Center"/>
+                <Button Text="     Text     "
+                        BackgroundColor="#FFCB0B"
+                        MinimumHeightRequest="30"
+                        Clicked="SendSms"
+                        Grid.Column="2"
+                        HorizontalOptions="Center"/>
+            </Grid>
+            <Label Text="Make sure group messaging is off in messenger settings prior to sending text&#x0a;&#x0a;Instructions:" 
+                       TextColor="Red"
+                       FontSize="Medium">
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="iPhone&#x0a;&#x0a;"
+                              TextColor="Blue"
+                              TextDecorations="Underline"
+                              FontSize="Medium">
+                            <Span.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTapGestureRecognizerTappediPhone"  />
+                            </Span.GestureRecognizers>
+                        </Span>
+                        <Span Text="Android"
+                              TextColor="Blue"
+                              TextDecorations="Underline"
+                              FontSize="Medium">
+                            <Span.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTapGestureRecognizerTappedAndroid" />
+                            </Span.GestureRecognizers>
+                        </Span>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+        </StackLayout>
+        <StackLayout x:Name="imagePanel"
+                     Grid.Row="1"
+                     Orientation="Vertical" 
+                     HorizontalOptions="Center"                     
+                     VerticalOptions="Center">
+            <Image Source="srumodernseal.png"></Image>
+        </StackLayout>
+        <!--<ListView x:Name="todoList"
+				ItemSelected="OnSelected"
+				IsPullToRefreshEnabled="true" Refreshing="OnRefresh"
+				Grid.Row="1">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <ViewCell.ContextActions>
+                            <MenuItem Clicked="OnComplete" Text="Complete" CommandParameter="{Binding .}"/>
+                        </ViewCell.ContextActions>
+                        <StackLayout HorizontalOptions="StartAndExpand" Orientation="Horizontal" Padding="15,5,0,0">
+                            <StackLayout Padding="5,0,0,0" VerticalOptions="StartAndExpand" Orientation="Vertical">
+                                <Label Text="{Binding Name}"  />
+                            </StackLayout>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>-->
+    </Grid>
+</ContentPage>

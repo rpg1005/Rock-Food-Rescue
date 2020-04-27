@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using Xamarin.Essentials;
 
 namespace foodadmin
 {
+    //Post
     public partial class TodoList : ContentPage
     {
         TodoItemManager manager;
 
+        //Main constructor
         public TodoList()
         {
             InitializeComponent();
@@ -35,32 +36,44 @@ namespace foodadmin
                 }
             }
         }
-        //void Push_Clicked(object sender, EventArgs e)
-        //{
-        //    Device.OpenUri(new Uri("https://appcenter.ms/users/rpg1005-sru.edu/apps/rockfoodrescue/push/notifications"));
-        //}
 
-        public async Task SendSms()
+        //Overloaded constructor with uploaded url from Photo
+        public TodoList(String UploadedUrl)
         {
-            try
+            InitializeComponent();
+
+            ImageUrl.Text = UploadedUrl;
+            manager = TodoItemManager.DefaultManager;
+            if (Device.RuntimePlatform == Device.UWP)
             {
-                string messageText = "Food available. Login to app for details.";
-                string recipient = "4403648413";
-                var message = new SmsMessage(messageText, new[] { recipient });
-                await Sms.ComposeAsync(message);
+                var refreshButton = new Button
+                {
+                    Text = "Refresh",
+                    HeightRequest = 30
+                };
+                refreshButton.Clicked += OnRefreshItems;
+                buttonsPanel.Children.Add(refreshButton);
+                if (manager.IsOfflineEnabled)
+                {
+                    var syncButton = new Button
+                    {
+                        Text = "Sync items",
+                        HeightRequest = 30
+                    };
+                    syncButton.Clicked += OnSyncItems;
+                    buttonsPanel.Children.Add(syncButton);
+                }
             }
-            catch (FeatureNotSupportedException ex)
-            {
-                // Sms is not supported on this device.
-            }
-            catch (Exception ex)
-            {
-                // Other error has occurred.
-            }
-        }
+        }     
+      
         protected override async void OnAppearing()
         {
-            base.OnAppearing();
+            base.OnAppearing();          
+            TimeSpan now = DateTime.Now.TimeOfDay;
+            var time1 = new TimeSpan(0, 0, 1, 0, 0);
+            var future = now.Add(time1);          
+            startTime.Time = now;
+            overTime.Time = future;
 
             // Set syncItems to true in order to synchronize the data on startup when running in offline mode
             await RefreshItems(true, syncItems: true);
@@ -78,24 +91,42 @@ namespace foodadmin
             item.Done = true;
             await manager.SaveTaskAsync(item);
             //todoList.ItemsSource = await manager.GetTodoItemsAsync();
+        } 
+        public async void Photo_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new Photo());
         }
 
-        public async void OnAdd(object sender, EventArgs e)
+        public async void Back_Clicked(object sender, EventArgs e)
         {
-            var todo = new TodoItem { Name = newItemName.Text , Over = overDate.Date + overTime.Time, Start = startDate.Date + startTime.Time, Place = local.Text };
-            await AddItem(todo);
-
-            newItemName.Text = string.Empty;
-            local.Text = string.Empty;
-            overDate.Date = DateTime.Now;
-            overTime.Time = DateTime.Now.TimeOfDay;
-            startDate.Date = DateTime.Now;
-            startTime.Time = DateTime.Now.TimeOfDay;
-            newItemName.Unfocus();
-            local.Unfocus();
-        } 
+            await Navigation.PushAsync(new TabbedPage1());
+        }
 
         // Event handlers
+        public async void OnAdd(object sender, EventArgs e)
+        {
+            var todo = new TodoItem { Name = newItemName.Text, Over = overDate.Date + overTime.Time, Start = startDate.Date + startTime.Time, Place = local.Text, Image = ImageUrl.Text };
+            if (todo.Over <= todo.Start)
+            {
+                await DisplayAlert("Alert", "Start date/time must be before end date/time", "OK");
+            }
+
+            else
+            {
+                await AddItem(todo);
+
+                newItemName.Text = string.Empty;
+                local.Text = string.Empty;
+                ImageUrl.Text = string.Empty;
+                overDate.Date = DateTime.Now;
+                overTime.Time = DateTime.Now.TimeOfDay;
+                startDate.Date = DateTime.Now;
+                startTime.Time = DateTime.Now.TimeOfDay;
+                newItemName.Unfocus();
+                local.Unfocus();
+            }
+        }
+
         public async void OnSelected(object sender, SelectedItemChangedEventArgs e)
         {
             var todo = e.SelectedItem as TodoItem;
@@ -120,8 +151,8 @@ namespace foodadmin
             //todoList.SelectedItem = null;
         }
 
-        // http://developer.xamarin.com/guides/cross-platform/xamarin-forms/working-with/listview/#context
-        public async void OnComplete(object sender, EventArgs e)
+            // http://developer.xamarin.com/guides/cross-platform/xamarin-forms/working-with/listview/#context
+            public async void OnComplete(object sender, EventArgs e)
         {
             var mi = ((MenuItem)sender);
             var todo = mi.CommandParameter as TodoItem;
